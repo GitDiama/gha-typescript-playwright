@@ -1,24 +1,15 @@
-name: 'Playwright Summary'
-description: 'Processes Playwright test results and formats a summary for GitHub job summaries'
-inputs:
-  test-results:
-    description: 'Path to the test results file'
-    required: true
+name: Playwright Summary
+description: "Formats Playwright test results for better readability"
+author: "Diama Gri"
+
 runs:
-  using: 'composite'
+  using: "composite"
+
   steps:
-    - name: 'Read test results'
-      id: read-results
+    - name: Format test results
+      # Reads the test report file and appends its content to GitHub job summary.
       run: |
-        cat ${{ inputs.test-results }} > results.txt
-    - name: 'Format summary'
-      id: format-summary
-      run: |
-        echo "## Playwright Test Summary" > summary.md
-        echo "" >> summary.md
-        cat results.txt >> summary.md
-    - name: 'Upload summary'
-      uses: actions/upload-artifact@v2
-      with:
-        name: playwright-summary
-        path: summary.md
+        echo "### Playwright Test Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        cat test-results/report.txt | awk '{print "- **" $0 "**"}' >> $GITHUB_STEP_SUMMARY
+      shell: bash
