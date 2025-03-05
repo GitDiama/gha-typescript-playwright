@@ -1,0 +1,3 @@
+ name: playwright-summary
+        path: summary.md
+        test-results: 'test-results/report.txt'
